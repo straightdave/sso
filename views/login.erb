@@ -1,0 +1,20 @@
+<div style="margin: 0 auto; width: 120px; margin-top: 80px;">
+  <h3>SSO登录</h3>
+  <p>
+    You came from <%= @client.name %>
+  </p>
+  <form method="post">
+    <p>
+      <label for="tb_name">Name</label><br />
+      <input type="text" id="tb_name" name="name" placeholder="name/phone/email" />
+    </p>
+    <p>
+      <label for="tb_pass">Password</label><br />
+      <input type="password" id="tb_pass" name="pass" placeholder="Password" />
+    </p>
+    <p>
+      <input type="submit" value="Submit" />
+      <input type="hidden" name="code" value="<%= session[:proc_code] %>" />
+    </p>
+  </form>
+</div>
