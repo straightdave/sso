@@ -1,4 +1,5 @@
 require 'sinatra'
+require 'active_record'
 require 'securerandom'
 require 'sinatra/cookies'
 require_relative 'models/account'
@@ -6,6 +7,20 @@ require_relative 'models/client'
 
 use Rack::Session::Pool, :expire_after => 2592000
 
+ActiveRecord::Base.establish_connection(
+  :adapter  => "mysql2",
+  :host     => "localhost",
+  :username => "dave",
+  :password => "123123",
+  :database => "sso"
+)
+ActiveRecord::Base.default_timezone = :local
+
+after do
+  ActiveRecord::Base.connection.close
+end
+
+# routers
 get '/' do
   redirect to("/account/login?from=_home")
 end
@@ -20,12 +35,12 @@ get '/account/login' do
 
   # if already logged on, go client's callback asap
   if who = cookies[:who] &&
-     account = Account.find_by_id(who) &&
-     account.apps.index(@client.id) &&
+     account = Account.find_by(id: who) &&
+     account.apps.exists?(@client.id) &&
      session[:account_id] == who
     session[:proc_step] = "loggedin"
     # already have :proc_expire and :proc_code for checking
-    redirect to(account.callback_url + "?who=#{who}&ticket=#{session[:proc_code]}")
+    redirect to(client.callback_url + "?who=#{who}&ticket=#{session[:proc_code]}")
   end
 
   erb :login
@@ -44,13 +59,13 @@ post '/account/login' do
   halt 455, "err: no name" unless name = params["name"]
   halt 455, "err: no pass" unless pass = params["pass"]
   halt 456, "err: wrong name" unless account = Account.find_by_name(name)
-  halt 459, "err: no access" unless account.apps.index(client.id)
+  halt 459, "err: no access" unless account.apps.exists?(client.id)
   halt 456, "err: wrong password" unless account.password == pass
 
   # login user
   session[:account_name] = name
   session[:account_id] = account.id
-  session[:account_apps] = account.apps.join('_')
+  session[:account_apps] = account.app_ids.join('_')
 
   # reset proc session
   session[:proc_code] = SecureRandom.uuid # new uuid for check
@@ -59,10 +74,11 @@ post '/account/login' do
 
   # set persona cookie
   # SECURTY NEED
-  cookie[:who] = account.id
+  cookies[:who] = account.id
 
   # redirect to callback url
-  redirect to(account.callback_url + "?who=#{who}&ticket=#{session[:proc_code]}")
+  who = account.id
+  redirect to(client.callback_url + "?who=#{who}&ticket=#{session[:proc_code]}")
 end
 
 # every time redirect to client's callback_url,
@@ -78,13 +94,14 @@ get '/check/:ticket' do |ticket|
   # NEED WHO cookie
   halt 452, "err: wrong app" unless client = Client.find_by_appkey(header_appkey)
   halt 462, "err: no who" unless who = params["who"]
-  halt 456, "err: wrong id" unless account = Account.find_by_id(who)
-  halt 459, "err: no access" unless account.apps.index(client.id)
+  halt 456, "err: wrong id" unless account = Account.find_by(id: who)
+  halt 459, "err: no access" unless account.apps.exists?(client.id)
 
   halt 463, "err: wrong step" unless session[:proc_step] == "loggedin"
   halt 454, "err: ticket timeout" unless Time.now.getutc < session[:proc_expire]
   halt 463, "err: wrong ticket" unless ticket == session[:proc_code]
 
+  # finish proc
   session[:proc_expire] = nil
   session[:proc_step] = nil
   session[:proc_code] = nil
@@ -96,4 +113,8 @@ get '/check/:ticket' do |ticket|
   else
     "false"
   end
+end
+
+get '/reset' do
+  session.destroy
 end
