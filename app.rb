@@ -1,9 +1,12 @@
 require 'sinatra'
+require 'sinatra/json'
+require 'json'
 require 'active_record'
 require 'securerandom'
 require 'sinatra/cookies'
 require_relative 'models/account'
 require_relative 'models/client'
+require_relative 'helpers'
 
 use Rack::Session::Pool, :expire_after => 2592000
 
@@ -21,6 +24,11 @@ after do
 end
 
 # routers
+get '/welcome' do
+  halt 470, "err: no valid login" unless (login? && @account = Account.find_by(id: session[:account_id]))
+  erb :welcome
+end
+
 get '/' do
   redirect to("/account/login?from=_home")
 end
@@ -34,13 +42,12 @@ get '/account/login' do
   session[:proc_step] = "initlogin"
 
   # if already logged on, go client's callback asap
-  if who = cookies[:who] &&
-     account = Account.find_by(id: who) &&
-     account.apps.exists?(@client.id) &&
-     session[:account_id] == who
+  if (who = cookies[:who]) &&
+     (account = Account.find_by(id: who)) &&
+     (account.apps.exists?(@client.id)) &&
+     (session[:account_id] == who.to_i)
     session[:proc_step] = "loggedin"
-    # already have :proc_expire and :proc_code for checking
-    redirect to(client.callback_url + "?who=#{who}&ticket=#{session[:proc_code]}")
+    redirect to(@client.callback_url + "?who=#{who}&ticket=#{session[:proc_code]}")
   end
 
   erb :login
@@ -109,12 +116,19 @@ get '/check/:ticket' do |ticket|
   # return whether logged in
   if session[:account_id] == who &&
      session[:account_name] == account.name
-    "true"
+    json ret: true, account: account
   else
-    "false"
+    halt 444, "err: not login"
   end
 end
 
+# API call by clients
+get '/account/logout' do
+  logout
+  json ret: "sucess"
+end
+
+# for development use
 get '/reset' do
   session.destroy
 end
