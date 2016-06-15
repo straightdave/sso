@@ -1,7 +1,7 @@
 <h2>Welcome <%= @account.name %></h2>
 <p>
-  This page is just a welcome from SSO service.
+  You are logged in. and you came from <%= @referrer %>.
 </p>
 <p>
-  <a href="/account/logout">LOG OUT</a>
+  <a href="/account/logout?from=_home">LOG OUT</a>
 </p>
