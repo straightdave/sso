@@ -78,7 +78,7 @@ CREATE TABLE `clients` (
   `skey` varchar(50) DEFAULT NULL,
   `callback_url` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -87,7 +87,7 @@ CREATE TABLE `clients` (
 
 LOCK TABLES `clients` WRITE;
 /*!40000 ALTER TABLE `clients` DISABLE KEYS */;
-INSERT INTO `clients` VALUES (1,'app1','appkey1','skey1',''),(2,'app2','appkey2','skey2',''),(3,'sso','_home','_home','http://localhost:4567/');
+INSERT INTO `clients` VALUES (1,'app1','appkey1','skey1','http://localhost:8011/sso_callback'),(2,'app2','appkey2','skey2','http://localhost:8012/sso_callback'),(3,'sso','_home','_home','http://localhost:8001/');
 /*!40000 ALTER TABLE `clients` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -100,4 +100,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-06-13 19:23:41
+-- Dump completed on 2016-06-16 16:12:15
