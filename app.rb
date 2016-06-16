@@ -64,7 +64,7 @@ get '/account/login' do
   if (who = cookies[:who]) &&
      (@redis.exists(who)) &&
      (login_session_items = JSON.parse(@redis.get(who))) &&
-     (account = Account.find_by(id: login_session_items[:id])) &&
+     (account = Account.find_by(id: login_session_items["id"])) &&
      (account.apps.exists?(@client.id))
     redirect to(@client.callback_url + "?who=#{who}&ticket=#{proc_session_key}")
   end
@@ -142,11 +142,16 @@ end
 # logout from SSO, called via browser
 # so has cookies
 get '/account/logout' do
-  halt 465, "err: no who" unless who = cookies[:who]
-  halt 466, "err: invalid who" unless @redis.exists(who)
+  halt 451, "err: from nowhere" unless client_key = params["from"]
+  halt 452, "err: invalid app" unless client = Client.find_by_appkey(client_key)
 
+  halt 465, "err: no who" unless who = cookies[:who]
+  halt 466, "err: invalid who (or not login to sso)" unless @redis.exists(who)
+
+  # to logout from SSO
   @redis.del(who)
-  redirect to("/")
+
+  redirect to(client.callback_url + "?act=logout")
 end
 
 # on for dev purpose

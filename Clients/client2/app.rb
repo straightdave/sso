@@ -4,7 +4,7 @@ require 'digest'
 require 'json'
 require_relative 'helpers'
 
-set :port, 8011
+set :port, 8012
 set :public_folder, File.dirname(__FILE__) + '/src'
 use Rack::Session::Pool, :expire_after => 2592000
 
@@ -32,8 +32,8 @@ get '/sso_callback' do
   resp = Net::HTTP.start(uri.host, uri.port) do |http|
     request = Net::HTTP::Get.new uri
     # add header
-    request["x-appkey"] = "appkey1"
-    request["x-mac"] = Digest::MD5.hexdigest("/check/#{ticket}_skey1")
+    request["x-appkey"] = "appkey2"
+    request["x-mac"] = Digest::MD5.hexdigest("/check/#{ticket}_skey2")
     request["x-who"] = who
     http.request request
   end
