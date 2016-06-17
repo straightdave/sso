@@ -1,10 +1,18 @@
 <html>
 <head>
-  <title><%= @page_title %></title>
+  <title>中关村用户平台SSO</title>
 </head>
-<body>
-  <div style="margin: 0 auto; width: 120px; margin-top: 80px;">
-    <%= yield %>
+<body style="background-image: url(/images/login-bk.jpg);">
+  <div style="margin: 0 auto; width: 350px; margin-top: 150px; background-color:#FFF; padding: 10px 20px; border-radius: 10px;">
+    <div>
+      <h2 style="text-align: center;">中关村软件园用户平台SSO</h2>
+      <h5 style="text-align: center; color: gray;">v0.1 2016002</h5>
+      <%= yield %>
+      <p style="text-align: center;">
+        Copyright &copy; ZPark, 2016. All Rights Reserved.
+      </p>
+    </div>
   </div>
+  <script href="/js/jquery.min.js"></script>
 </body>
 </html>

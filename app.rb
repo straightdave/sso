@@ -9,6 +9,7 @@ require_relative 'models/account'
 require_relative 'models/client'
 require_relative 'helpers'
 
+set :public_folder, File.dirname(__FILE__) + '/public'
 use Rack::Session::Pool, :expire_after => 2592000
 set :port, 8001
 
