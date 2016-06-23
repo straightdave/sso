@@ -13,6 +13,10 @@ get '/' do
   erb :homepage
 end
 
+get '/company' do
+  erb :company
+end
+
 #callback url
 get '/sso_callback' do
 

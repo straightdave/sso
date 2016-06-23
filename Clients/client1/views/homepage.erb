@@ -1,4 +1,4 @@
-<div id="carousel-example-generic" class="carousel slide" data-ride="carousel" style="margin-top:-20px;">
+<div id="carousel-example-generic" class="carousel slide" data-ride="carousel" style="margin-top:-20px; margin-bottom: 80px;">
   <!-- Indicators -->
   <ol class="carousel-indicators">
     <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
@@ -40,17 +40,52 @@
 </div>
 
 <div class="container">
-  <% if login? %>
-  <h1>Welcome, <%= @login_user_name %></h1>
-  <p>
-    You are officially logged in this system. Enjoy!
-  </p>
-  <% else %>
-  <h1>Welcome to ZGC System</h1>
-  <p>
-    This is a sample site which is used to demonstrade how SSO works. <br />
-    Also this is a possible template for future systems both internal and external. <br />
-    Enjoy it!
-  </p>
-  <% end %>
+
+  <div class="row">
+    <div class="col-md-6">
+      <h3>中关村智慧园区静态数据管理系统</h3>
+      <p id="about-this" style="font-size:1.2em;">
+        <strong>关于本系统</strong>  本系统管理和共享中关村智慧园区的静态（标准）数据。<br/>
+        静态（标准）数据，是中关村智慧园区官方发布的权威标准数据，包括企业数据（年度更新）、人才数据、管理数据、国家标准数据、计量单位等。接入中关村智慧园区数据平台的第三方系统，可以通过数据接口获取静态数据。
+        本系统用于针对静态数据的内部管理：如数据的采集、发布、过期数据存档等。
+      </p>
+    </div>
+
+    <div class="col-md-offset-3 col-md-3">
+      <div style="margin: 10px; padding: 10px">
+        <img src="pic1.jpg" alt="pic1" height="180" />
+      </div>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top:100px;">
+    <div class="col-md-3">
+      <div style="margin: 10px; padding: 10px">
+        <img src="pic2.jpg" alt="pic2" height="180" />
+      </div>
+    </div>
+
+    <div class="col-md-offset-3 col-md-6">
+      <h3>如何接入</h3>
+      <p style="font-size:1.2em;">
+        <strong>目的：读取标准数据</strong> &nbsp;
+        第三方系统若要获取、使用智慧园区官方发布的标准静态数据，需要接入中关村智慧园区的数据总线平台。<br/>
+        <strong>如何接入数据总线平台</strong> &nbsp;
+        请联系智慧园区管委会 email: access@databus.zpark.cn <br/>
+        或访问数据总线平台<a href="http://databus.zpark.cn">官方站点</a>
+      </p>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top:100px">
+    <h4 style="text-align:center;">系统新闻</h4>
+    <hr>
+    <p>
+    2016-06-06 | 系统定于本日晚24时整进入维护，预计耗时1小时 <br/>
+    2016-04-10 | 2015年度企业数据发布 <br/>
+    2016-04-01 | 系统正式上线运行(v1.0) <br/>
+    2016-02-12 | 系统预览版（v1.0Beta）上线 <br/>
+    </p>
+  </div>
+
 </div>
